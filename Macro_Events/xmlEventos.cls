@@ -10,7 +10,6 @@ Dim clock As String
 Dim SaveRoutes As createFile
 Set SaveRoutes = New createFile
 
-SaveRoutes.Read_Files
 
 
 Set XMLArchivo = CreateObject("MSXML2.DOMDocument")
