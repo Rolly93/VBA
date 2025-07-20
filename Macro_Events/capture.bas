@@ -103,6 +103,24 @@ For Each cell In rango
                             Eventos.eventCreator reference, type_Event, comments, formatdateTime, tipoOperacion, scac
                             
                         End If
+
+                        'Evento  RLS / Verde USA
+                        If EventsWorkSheet.Cells(rowCell, "T").value <> "" And EventsWorkSheet.Cells(rowCell, "U").value <> "" Then
+                            'Extraccion de Fecha y Hora
+                            excDate = getDataFromExel(EventsWorkSheet, rowCell, "T")
+                            excTime = getDataFromExel(EventsWorkSheet, rowCell, "U")
+                            comments = "Verde USA"
+                            
+                            'formato de Fecha para archivo XML
+                            formatdateTime = formatEvent(excDate, excTime)
+                            type_Event = "RLS"
+                                    
+                                    
+                            'Enviar el Evento a la Clase de Eventos
+                            Eventos.eventCreator reference, type_Event, comments, formatdateTime, tipoOperacion, scac
+                        End If
+
+
                         'Evento  ST1 / Resguardo USA
                         If EventsWorkSheet.Cells(rowCell, "V").value <> "" And EventsWorkSheet.Cells(rowCell, "W").value <> "" And EventsWorkSheet.Cells(rowCell, "X").value <> "" Then
                             'Extraccion de Fecha y Hora
