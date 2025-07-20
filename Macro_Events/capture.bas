@@ -53,7 +53,7 @@ For Each cell In rango
                     excTime = getDataFromExel(EventsWorkSheet, rowCell, "J")
                     
                     'formato de Fecha para archivo XML
-                    formatdateTime = formatEvent(excTime, excTime)
+                    formatdateTime = formatEvent(excDate, excTime)
                     type_Event = "DPU"
                     comments = "Saliendo de Patio Origen"
                     
@@ -68,7 +68,7 @@ For Each cell In rango
                         comments = getDataFromExel(EventsWorkSheet, rowCell, "M")
                         
                         'formato de Fecha para archivo XML
-                        formatdateTime = formatEvent(excTime, excTime)
+                        formatdateTime = formatEvent(excDate, excTime)
                         type_Event = "EXR"
                         
                         'Enviar el Evento a la Clase de Eventos
@@ -84,7 +84,7 @@ For Each cell In rango
                         'formato de Fecha para archivo XML
                         type_Event = "CLR"
                         comments = "Modulando Verde MX"
-                        formatdateTime = formatEvent(excTime, excTime)
+                        formatdateTime = formatEvent(excDate, excTime)
                         
                         'Enviar el Evento a la Clase de Eventos
                         Eventos.eventCreator reference, type_Event, comments, formatdateTime, tipoOperacion, scac
@@ -96,7 +96,7 @@ For Each cell In rango
                             excTime = getDataFromExel(EventsWorkSheet, rowCell, "Q")
                             comments = EventsWorkSheet.Cells(rowCell, "R").value & "nuevo Sello" & EventsWorkSheet.Cells(rowCell, "S").value
                             'formato de Fecha para archivo XML
-                            formatdateTime = formatEvent(excTime, excTime)
+                            formatdateTime = formatEvent(excDate, excTime)
                             type_Event = "ILR"
                             
                             'Enviar el Evento a la Clase de Eventos
@@ -111,7 +111,7 @@ For Each cell In rango
                             comments = EventsWorkSheet.Cells(rowCell, "X").value <> ""
                             
                             'formato de Fecha para archivo XML
-                            formatdateTime = formatEvent(excTime, excTime)
+                            formatdateTime = formatEvent(excDate, excTime)
                             type_Event = "ST1"
                                     
                                     
@@ -127,7 +127,7 @@ For Each cell In rango
                                     comments = getDataFromExel(EventsWorkSheet, rowCell, "AA")
                                     
                                     'formato de Fecha para archivo XML
-                                    formatdateTime = formatEvent(excTime, excTime)
+                                    formatdateTime = formatEvent(excDate, excTime)
                                     type_Event = "TSC"
                                     
                                     'Enviar el Evento a la Clase de Eventos

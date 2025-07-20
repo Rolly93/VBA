@@ -26,9 +26,9 @@ Sub KeepData(rowShipment, shipmentList, invoice_Sheet, upLoader)
     lastRow = invoice_Sheet.Cells(invoice_Sheet.Rows.Count, "A").End(xlUp).row ' que encuentre el ultimo renglon de la columna de facutras
     
     For i = 11 To lastRow
-        invoice_Column = invoice_Sheet.Cells(i, "A").value
-        RefeExpor_Column = invoice_Sheet.Cells(i, "B").value
-        RefImport_Column = invoice_Sheet.Cells(i, "C").value
+        Ucase(invoice_Column) = invoice_Sheet.Cells(i, "A").value
+        UCase(RefeExpor_Column) = invoice_Sheet.Cells(i, "B").value
+        UCase(RefImport_Column) = invoice_Sheet.Cells(i, "C").value
 
         correctReferenceImportation = upLoader.clearData(RefImport_Column)
 
