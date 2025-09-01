@@ -4,8 +4,8 @@ import proyect
 import argparse
 import tkinter as tk
 from tkinter import ttk
-from proyect.utility.layer import insert
 from proyect.backend.bypass import KeyringManager
+from proyect.utility.layer import insert ,startup ,extractData
 def show_login_ui():
     """
     Creates and displays the login UI window.
@@ -77,11 +77,11 @@ def show_login_ui():
         Saves the credentials and closes the window.
         """
         try:
-            credentials_store["user"] = username_entry.get()
-            credentials_store["password"] = password_entry.get()
-            credentials_store["host"] = host_entry.get()
+            credentials_store["user"] = username_entry.get().strip()
+            credentials_store["password"] = password_entry.get().strip()
+            credentials_store["host"] = host_entry.get().strip()
             credentials_store["remote_dir"] = remote_dir_entry.get()
-            credentials_store['port'] = port_entry.get()
+            credentials_store['port'] = port_entry.get().strip()
         
             insert( credentials_store)
             bypass.save_password(credentials_store['user'], credentials_store['password'])
@@ -137,6 +137,14 @@ def run_backend_code(username, password):
     print("\n--- Running Backend Code ---")
     if username and password:
         print(f"Backend process started with username: {username}")
+        
+        config ={
+            'user':username,
+            'password':password,
+        }
+        
+        extractData(config)
+        
         # Your SFTP logic, API calls, etc. would go here.
         # Example: sftp_client.connect(host=..., user=username, password=password)
     else:
@@ -156,7 +164,7 @@ if __name__ == "__main__":
     user , pwd = bypass.getCredencials()
     
     args = parse.parse_args()
-    
+    startup()
     if args.command == "run":
         run_backend_code(user, pwd )
     else:

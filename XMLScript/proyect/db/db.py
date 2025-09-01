@@ -27,8 +27,7 @@ def setup_database(db_name='transportapp.db'):
             sftp_password TEXT,
             sftp_host TEXT NOT NULL,
             remote_directory TEXT NOT NULL,
-            sftp_port INTEGER,
-        );
+            sftp_port INTEGER);
         """
 
         # Execute the SQL statement to create the table

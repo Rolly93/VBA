@@ -1,6 +1,6 @@
 import os
 import paramiko
-import Ffilereader
+
 
 
 
@@ -19,7 +19,7 @@ def upload_xml_files(config:dict,LOCAL_DIRECTORY:str):
     SFTP_HOST = config["host"]
     REMOTE_DIRECTORY = config["remote_dir"]
     SFTP_PORT =config['port']
-    LOCAL_DIRECTORY = Ffilereader.XMLFileList()
+    LOCAL_DIRECTORY = LOCAL_DIRECTORY
 
     xml_files =LOCAL_DIRECTORY
     """
