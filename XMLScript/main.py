@@ -6,6 +6,38 @@ import tkinter as tk
 from tkinter import ttk
 from proyect.backend.bypass import KeyringManager
 from proyect.utility.layer import insert ,startup ,extractData
+
+root = tk.Tk()
+root.title("SFTP Script File Sender")
+frame = ttk.Frame(root, padding="20")
+# --- Sizing and Centering the Window ---
+
+# Get the screen's dimensions
+screen_width = root.winfo_screenwidth()
+screen_height = root.winfo_screenheight()
+# Calculate the desired window size (half the screen size)
+window_width = screen_width // 2
+window_height = screen_height // 2
+# Calculate the position to center the window
+center_x = (screen_width - window_width) // 2
+center_y = (screen_height - window_height) // 2
+
+
+def messegeError(frame,Error,center_x ,center_y):
+    
+
+    pop_up = tk.Toplevel(frame)
+    pop_up.title("Error on Input")
+    pop_up.geometry(f"250x100+{center_x}+{center_y}")
+    pop_up.transient(frame)
+    pop_up.grab_set()
+    
+    msg_label = ttk.Label(pop_up, text=str(Error), padding=10)
+    msg_label.pack(expand=True)
+    
+    ok_button = ttk.Button(pop_up,text="OK", command=pop_up.destroy)
+    ok_button.pack(pady=5)
+    
 def show_login_ui():
     """
     Creates and displays the login UI window.
@@ -13,28 +45,15 @@ def show_login_ui():
     Returns:
         tuple: (username, password) entered by the user.
     """
-    root = tk.Tk()
-    root.title("SFTP Script File Sender")
 
-    # --- Sizing and Centering the Window ---
-    # Get the screen's dimensions
-    screen_width = root.winfo_screenwidth()
-    screen_height = root.winfo_screenheight()
 
-    # Calculate the desired window size (half the screen size)
-    window_width = screen_width // 2
-    window_height = screen_height // 2
-
-    # Calculate the position to center the window
-    center_x = (screen_width - window_width) // 2
-    center_y = (screen_height - window_height) // 2
 
     # Set the window geometry: width x height + x_position + y_position
     root.geometry(f'{window_width}x{window_height}+{center_x}+{center_y}')
     root.resizable(False, False) # Prevent window from being resized
 
     # --- UI Elements ---
-    frame = ttk.Frame(root, padding="20")
+
     frame.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
     username_label = ttk.Label(frame, text="Username:")
@@ -108,32 +127,12 @@ def show_login_ui():
 
     return credentials_store['user'], credentials_store["password"]
 
-def messegeError(frame,Error,center_x ,center_y):
-    
 
-    pop_up = tk.Toplevel(frame)
-    pop_up.title("Error on Input")
-    pop_up.geometry(f"250x100+{center_x}+{center_y}")
-    pop_up.transient(frame)
-    pop_up.grab_set()
-    
-    msg_label = ttk.Label(pop_up, text=str(Error), padding=10)
-    msg_label.pack(expand=True)
-    
-    ok_button = ttk.Button(pop_up,text="OK", command=pop_up.destroy)
-    ok_button.pack(pady=5)
     
 
 # --- Placeholder for your backend code ---
 def run_backend_code(username, password):
-    """
-    This function represents your backend logic.
-    Replace this with your actual code that uses the credentials.
-    
-    Args:
-        username (str): The username retrieved from the UI or file.
-        password (str): The password retrieved from the UI or file.
-    """
+
     print("\n--- Running Backend Code ---")
     if username and password:
         print(f"Backend process started with username: {username}")
@@ -142,8 +141,12 @@ def run_backend_code(username, password):
             'user':username,
             'password':password,
         }
-        
-        extractData(config)
+        try:
+            print("db access")
+            extractData(config)
+            
+        except Exception as e:
+            messegeError(frame,e ,center_x ,center_y)
         
         # Your SFTP logic, API calls, etc. would go here.
         # Example: sftp_client.connect(host=..., user=username, password=password)
@@ -151,36 +154,34 @@ def run_backend_code(username, password):
         print("Backend process could not run. Credentials were not provided.")
 
 if __name__ == "__main__":
-    SERVICE_ID  = "Border Crossing"
-    
+    SERVICE_ID = "Border Crossing"
+
     parse = argparse.ArgumentParser(description="Command Line for Script XML sender")
     
-    subparser = parse.add_subparsers(dest="command",help="Command available")
-    
-    run_parser = subparser.add_parser("run", help="Run de Script to send the files via SFTP")
-    
-    bypass = KeyringManager(SERVICE_ID)
-    
-    user , pwd = bypass.getCredencials()
-    
+    # Creates a subparser for the 'run' command.
+    subparser = parse.add_subparsers(dest="command", help="Command available")
+    run_parser = subparser.add_parser("run", help="Run the Script to send the files via SFTP")
+
     args = parse.parse_args()
+    
+    # Initialize the KeyringManager to handle credentials.
+    bypass = KeyringManager(SERVICE_ID)
+    user, pwd = bypass.getCredencials()
     startup()
-    if args.command == "run":
-        run_backend_code(user, pwd )
-    else:
-        if user:
-            print(f"Credencial found Keyring. Procedding with Backend Process.!")
-            run_backend_code(user,pwd)
-
+    
+    # Check if credentials exist; if not, prompt the user for them.
+    if not user or not pwd:
+        print("Credentials not found on the system. Showing Login Form.")
+        user, pwd = show_login_ui()
+        
+        # If the user provides credentials, save them.
+        if user and pwd:
+            bypass.save_password(user, pwd)
+            print("Credentials saved successfully.")
         else:
-
-            print("Credencials no Found on system. Showing Login Form")
-            user ,pwd = show_login_ui()
-
-            if user and pwd:
-                bypass.save_password(user, pwd)
-
-                run_backend_code(user ,pwd)
-
-            else:
-                print("Loging failed. Exiting.")
+            print("Login failed. Exiting.")
+            exit()
+            
+    # Once credentials are confirmed to exist, proceed with the backend process.
+    print("Credentials found. Proceeding with Backend Process.")
+    run_backend_code(user, pwd)

@@ -25,11 +25,14 @@ def insert (credencials:dict):
     db.add_sftp_config(host, user, port, hashed_password, remote_dir)
 
 def extractData(credencials:dict):
+    
     config  = db.get_sftp_config_connect(credencials['user'])
+    print("retrive from db",config['sftp_password'])
 
     if config:
-        db_hashed_password = config["sft_password"]
+        db_hashed_password = config["sftp_password"]
         if bcrypt.checkpw(credencials['password'].encode('utf-8'),db_hashed_password):
+            print("Acces to file system")
             pathXML = XMLFileList()
             
             credencials={
@@ -43,6 +46,7 @@ def extractData(credencials:dict):
             
             if not pathXML:
                 raise ValueError ("Local Dir not Found")
+            print("Runnin XML script")
             upload_xml_files(credencials, pathXML)
             
 def startup() -> None:

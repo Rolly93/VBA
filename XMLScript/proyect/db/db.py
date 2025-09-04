@@ -4,7 +4,8 @@ import sqlite3
 import getpass
 
 
-def setup_database(db_name='transportapp.db'):
+
+def setup_database(db_name='XMLScript//proyect//db//transportapp.db'):
     """
     Creates an SQLite database and an 'sftp_configs' table if it doesn't exist.
 
@@ -38,12 +39,12 @@ def setup_database(db_name='transportapp.db'):
     except sqlite3.Error as e:
         print(f"SQLite error: {e}")
     finally:
-        # Always close the database connection
+        # condicion para poder cerrar la base de datos si o si
         if conn:
             conn.close()
             print("Connection to database closed.")
 
-def add_sftp_config(host, user, port, password, remote_dir, db_name='transportapp.db'):
+def add_sftp_config(host, user, port, password, remote_dir, db_name='XMLScript//proyect//db//transportapp.db'):
     """
     Hashes the password and adds a new SFTP configuration to the database.
 
@@ -80,37 +81,33 @@ def add_sftp_config(host, user, port, password, remote_dir, db_name='transportap
     finally:
         if conn:
             conn.close()
-def get_sftp_config_connect(username,db_name = 'transportapp.db'):
-        """
-    Retrieves a configuration from the database and prompts for a password
-    to verify and establish a connection.
+def get_sftp_config_connect(username,db_name = 'XMLScript//proyect//db//transportapp.db'):
 
-    Args:
-        username (str): The username to retrieve the configuration for.
-        db_name (str): The name of the database file.
-    """
         conn = None
-        
+        print(f"Username: {username}")
         data=[]
         try:
             conn = sqlite3.connect(db_name)
             
+            conn.row_factory = sqlite3.Row
             Cursor = conn.cursor()
             
             #Extraer la informacion del base de datos
             
-            Cursor.execute("SELECT sftp_user , sftp_password , sftp_host , remote_directory, ,sftp_port FROM sftp_configs WEHERE SFTP_USER =?",(username))
+            Cursor.execute("SELECT * FROM sftp_configs WHERE sftp_user = ?;", (username,))
+            print(Cursor)
             config = Cursor.fetchone()
+            print(config,"from database")
             if config:
-                data = config
-                
+                data = dict(config)
                 
                 print(f"Attempting to connect to SFTP as User: {username}")
                 
                 
         
         except Exception as e:
-            raise e
+            print ("something went wrong:" , e)
+            
         finally:
             if conn:
                 conn.close()

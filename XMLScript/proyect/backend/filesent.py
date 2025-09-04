@@ -13,12 +13,11 @@ def upload_xml_files(config:dict,LOCAL_DIRECTORY:str):
     credentials_store["host"]
     credentials_store["remote_dir"]
     credentials_store['port']"""
-    SFTP_HOST = config['host']
-    SFTP_USER= config["user"]
+    SFTP_HOST = config['sftp_host']
+    SFTP_USER= config["sftp_user"]
     SFTP_PASSWORD = config["password"]
-    SFTP_HOST = config["host"]
-    REMOTE_DIRECTORY = config["remote_dir"]
-    SFTP_PORT =config['port']
+    REMOTE_DIRECTORY = config["remote_directory"]
+    SFTP_PORT =config['sftp_port']
     LOCAL_DIRECTORY = LOCAL_DIRECTORY
 
     xml_files =LOCAL_DIRECTORY
@@ -58,6 +57,8 @@ def upload_xml_files(config:dict,LOCAL_DIRECTORY:str):
             print(f"Uploading '{local_path}' to '{remote_path}'...")
             sftp_client.put(local_path, remote_path)
             print("Upload complete.")
+            removeFile(local_path)
+            
 
         print("All XML files have been uploaded successfully.")
         
@@ -78,3 +79,9 @@ def upload_xml_files(config:dict,LOCAL_DIRECTORY:str):
             ssh_client.close()
             print("SSH connection closed.")
 
+def removeFile(FileNameRoute):
+    try:
+        os.remove(FileNameRoute)
+        
+    except OSError as e:
+        raise f"Error: {FileNameRoute} could not be removed,  \n Reason: {e.strerror}"
