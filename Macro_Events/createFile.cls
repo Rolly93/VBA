@@ -39,6 +39,7 @@ pOrigen_File = Environ("USERPROFILE") & "\Documents\folderPath.txt"
 Set fileSystemObject = CreateObject("Scripting.FileSystemObject")
 Set backupFilsSystemObject = CreateObject("Scripting.FileSystemObject")
 
+    
     On Error GoTo OrigenCreated
     Set pfileName = fileSystemObject.OpenTextFile(pOrigen_File, 1)
     GoTo OrigenCreated
@@ -86,6 +87,7 @@ Set fileSystemObject = CreateObject("Scripting.FileSystemObject")
 On Error Resume Next
 pSaveRouteFile = OriginalRoute
     On Error GoTo 0
+    
     If pSaveRouteFile <> "" Then
         MsgBox "Ya has Seleccinado Una ubicacion para guardar. Esta es La ruta" & pSaveRouteFile, vbInformation, "RUTA PRESELECCIONADA EXISTENTE"
         Exit Sub
