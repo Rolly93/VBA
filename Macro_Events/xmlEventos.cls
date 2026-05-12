@@ -5,7 +5,7 @@ Dim XmlNodo As Object
 Dim archivoXML As String, backupArchivoXML As String
 Dim archivoLocal As String, backupArchivo As String
 Dim clock As String
-
+Dim validate As String
 
 Dim SaveRoutes As createFile
 Set SaveRoutes = New createFile
@@ -33,9 +33,11 @@ XMLArchivo.appendChild XmlNodo
 archivoLocal = SaveRoutes.OriginalRoute
 backupArchivo = SaveRoutes.BackUpRoute
 clock = Format(Now, "yyyymmddhhmmss")
-' ruta de l archivo /  SCAC / Referencia / Tipop de evento / Timepo / tipo de archivo
+
 archivoXML = archivoLocal & scac & "_" & reference & "_" & type_Event & "_" & clock & ".xml"
 backupArchivoXML = backupArchivo & scac & "_" & reference & "_" & type_Event & "_" & clock & ".xml"
+
+validate = Dir(backupArchivo & scac & "_" & reference & "_" & type_Event & "*.xml")
 
 If Dir(backupArchivo & scac & "_" & reference & "_" & type_Event & "*.xml") = "" Then
     XMLArchivo.Save archivoXML
